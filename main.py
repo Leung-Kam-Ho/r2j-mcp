@@ -18,21 +18,19 @@ mcp = FastMCP("R2J-MCP")
 SYSTEM_PROMPT = f"""
 Today's date is {datetime.now().strftime('%Y-%m-%d')}.
 You are a receipt parser. You will be given a image of receipt. Your task is to extract information from the receipt:
+name : str  # name of the item
+date_of_payment : str  # date of payment, in YYY-MM-DD format
+currency : str  # currency of the payment, e.g. USD, EUR, etc.
+total_amount : float  # total amount of the payment
 """
 
 
 @dataclass
 class ReceiptContent:
-    """
-    name : str (name of the item)
-    date_of_payment : str (date of payment in YYYY-MM-DD format)
-    currency : str (currency of the payment e.g USD, EUR)
-    amount : float (amount of the payment)
-    """
-    name : str
-    date_of_payment : str
-    currency : str
-    amount : float
+    name : str  # name of the item, add item# as prefix
+    date_of_payment : str  # date of payment, in YYYY-MM-DD format
+    currency : str  # currency of the payment, e.g. USD, EUR, etc.
+    total_amount : float  # total amount of the payment
 
 
 provider = OpenAIProvider(

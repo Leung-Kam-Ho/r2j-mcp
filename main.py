@@ -3,6 +3,7 @@ from mcp.server.fastmcp import FastMCP
 from pydantic_ai.models.openai import OpenAIModel
 from pydantic_ai.providers.openai import OpenAIProvider
 from pydantic_ai import Agent, BinaryContent
+from pydantic import BaseModel, Field
 from pathlib import Path
 from datetime import datetime
 from dataclasses import dataclass
@@ -17,20 +18,21 @@ mcp = FastMCP("R2J-MCP")
 
 SYSTEM_PROMPT = f"""
 Today's date is {datetime.now().strftime('%Y-%m-%d')}.
-You are a receipt parser. You will be given a image of receipt. Your task is to extract information from the receipt:
-name : str  # name of the item
-date_of_payment : str  # date of payment, in YYY-MM-DD format
-currency : str  # currency of the payment, e.g. USD, EUR, etc.
-total_amount : float  # total amount of the payment
+You are a receipt parser. You will be given a image of receipt. Your task is to extract information from the receipt
 """
 
 
-@dataclass
-class ReceiptContent:
-    name : str  # name of the item, add item# as prefix
-    date_of_payment : str  # date of payment, in YYYY-MM-DD format
-    currency : str  # currency of the payment, e.g. USD, EUR, etc.
-    total_amount : float  # total amount of the payment
+class ReceiptContent(BaseModel):
+    """
+    - name: str - Name of the item
+    - date_of_payment: str - Date of payment, in YYYY-MM format
+    - currency: str - Currency of the payment, e.g. USD, EUR, etc.
+    - total_amount: float - Total amount of the payment
+    """
+    name : str
+    date_of_payment : str
+    currency : str
+    total_amount : float
 
 
 provider = OpenAIProvider(
